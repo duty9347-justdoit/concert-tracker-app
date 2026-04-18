@@ -2,6 +2,11 @@
   "expo": {
     "name": "concert-tracker-app",
     "slug": "concert-tracker-app",
+    "extra": {
+      "eas": {
+        "projectId": "aedb0055-c1a9-49eb-927a-b04e18f45da0"
+      }
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
