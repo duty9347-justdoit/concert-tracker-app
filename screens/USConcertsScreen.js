@@ -5,6 +5,7 @@ import {
   ActivityIndicator, RefreshControl,
 } from 'react-native';
 import { API_BASE_URL } from '../config';
+import { apiFetch } from '../utils/apiFetch';
 import ConcertCard from '../components/ConcertCard';
 
 export default function USConcertsScreen() {
@@ -16,7 +17,7 @@ export default function USConcertsScreen() {
   const fetchConcerts = useCallback(async () => {
     try {
       setError(null);
-      const res  = await fetch(`${API_BASE_URL}/concerts/us?limit=200`);
+      const res  = await apiFetch('/concerts/us?limit=200');
       const data = await res.json();
       const sorted = data.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
       setConcerts(sorted);

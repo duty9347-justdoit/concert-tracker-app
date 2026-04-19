@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { Platform, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
-import { API_BASE_URL } from '../config';
+import { apiFetch } from '../utils/apiFetch';
 
 // How notifications appear when app is in foreground
 Notifications.setNotificationHandler({
@@ -69,17 +69,14 @@ async function registerForPushNotifications() {
   // Get Expo push token
   console.log('Getting Expo push token...');
   try {
-    const tokenData = await Notifications.getExpoPushTokenAsync({
-      projectId: 'aedb0055-c1a9-49eb-927a-b04e18f45da0'
-    });
+    const tokenData = await Notifications.getExpoPushTokenAsync();
     const token     = tokenData.data;
     console.log('Expo push token:', token);
 
     // Register token with backend
     console.log('Sending token to backend:', `${API_BASE_URL}/push-token`);
-    const res = await fetch(`${API_BASE_URL}/push-token`, {
+    const res = await apiFetch('/push-token', {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ token }),
     });
     const data = await res.json();

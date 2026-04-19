@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { API_BASE_URL } from '../config';
+import { apiFetch } from '../utils/apiFetch';
 
 const EMPTY_FORM = {
   id: '', name: '', enabled: true,
@@ -30,7 +31,7 @@ export default function ArtistsScreen() {
   const fetchArtists = useCallback(async () => {
     try {
       setError(null);
-      const res  = await fetch(`${API_BASE_URL}/artists`);
+      const res  = await apiFetch(`/artists`);
       const data = await res.json();
       setArtists(data);
     } catch (e) {
@@ -78,8 +79,8 @@ export default function ArtistsScreen() {
     }
     setBitLooking(true);
     try {
-      const res  = await fetch(
-        `${API_BASE_URL}/bandsintown-lookup?name=${encodeURIComponent(query)}`
+      const res  = await apiFetch(
+        `/bandsintown-lookup?name=${encodeURIComponent(query)}`
       );
       const data = await res.json();
       if (data.found && data.bandsintown_id) {
@@ -113,7 +114,7 @@ export default function ArtistsScreen() {
     try {
       let res;
       if (isEditing) {
-        res = await fetch(`${API_BASE_URL}/artists/${form.id}`, {
+        res = await apiFetch(`/artists/${form.id}`, {
           method:  'PUT',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({
@@ -125,7 +126,7 @@ export default function ArtistsScreen() {
           }),
         });
       } else {
-        res = await fetch(`${API_BASE_URL}/artists`, {
+        res = await apiFetch(`/artists`, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify(form),
@@ -157,7 +158,7 @@ export default function ArtistsScreen() {
           onPress: async () => {
             setSaving(true);
             try {
-              const res = await fetch(`${API_BASE_URL}/artists/${form.id}`, { method: 'DELETE' });
+              const res = await apiFetch(`/artists/${form.id}`, { method: 'DELETE' });
               const data = await res.json();
               if (!res.ok) {
                 Alert.alert('Error', data.detail || 'Failed to delete artist.');
@@ -184,7 +185,7 @@ export default function ArtistsScreen() {
     }
     setScraping(artist.id);
     try {
-      const res  = await fetch(`${API_BASE_URL}/scrape/${artist.id}`, { method: 'POST' });
+      const res  = await apiFetch(`/scrape/${artist.id}`, { method: 'POST' });
       const data = await res.json();
       Alert.alert(
         '✅ Scrape Complete',

@@ -5,6 +5,7 @@ import {
   ActivityIndicator, RefreshControl, TextInput,
 } from 'react-native';
 import { API_BASE_URL } from '../config';
+import { apiFetch } from '../utils/apiFetch';
 import ConcertCard from '../components/ConcertCard';
 
 export default function HomeScreen() {
@@ -18,19 +19,13 @@ export default function HomeScreen() {
   const fetchConcerts = useCallback(async () => {
     try {
       setError(null);
-      const res  = await fetch(`${API_BASE_URL}/concerts?limit=200`);
+      const res  = await apiFetch('/concerts?limit=200');
       const data = await res.json();
       // Sort: US first, then by date
-      const parseDate = (dateStr) => {
-        if (!dateStr) return 0;
-        const d = new Date(dateStr);
-        return isNaN(d.getTime()) ? 0 : d.getTime();
-      };
-
-	  const sorted = data.sort((a, b) => {
-	  if (b.is_us !== a.is_us) return b.is_us - a.is_us;
-		return parseDate(b.date) - parseDate(a.date);  // descending: latest first
-	  });
+      const sorted = data.sort((a, b) => {
+        if (b.is_us !== a.is_us) return b.is_us - a.is_us;
+        return (a.date || '').localeCompare(b.date || '');
+      });
       setConcerts(sorted);
       setFiltered(sorted);
     } catch (e) {
