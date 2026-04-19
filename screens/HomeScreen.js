@@ -21,10 +21,28 @@ export default function HomeScreen() {
       setError(null);
       const res  = await apiFetch('/concerts?limit=200');
       const data = await res.json();
-      // Sort: US first, then by date
+
+      const parseDate = (dateStr) => {
+        if (!dateStr) return 0;
+        const months = {
+          Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6,
+          Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12
+        };
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          const year  = parseInt(parts[0]);
+          const month = months[parts[1]] ?? parseInt(parts[1]);
+          const day   = parseInt(parts[2]);
+          if (year && month && day) return new Date(year, month - 1, day).getTime();
+        }
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? 0 : d.getTime();
+      };
+
+      // Sort: US first, then by date descending
       const sorted = data.sort((a, b) => {
         if (b.is_us !== a.is_us) return b.is_us - a.is_us;
-        return (a.date || '').localeCompare(b.date || '');
+        return parseDate(b.date) - parseDate(a.date);
       });
       setConcerts(sorted);
       setFiltered(sorted);

@@ -74,7 +74,7 @@ async function registerForPushNotifications() {
     console.log('Expo push token:', token);
 
     // Register token with backend
-    console.log('Sending token to backend:', `${API_BASE_URL}/push-token`);
+    console.log('Sending token to backend...');
     const res = await apiFetch('/push-token', {
       method:  'POST',
       body:    JSON.stringify({ token }),

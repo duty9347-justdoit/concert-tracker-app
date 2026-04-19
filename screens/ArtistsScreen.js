@@ -33,7 +33,16 @@ export default function ArtistsScreen() {
       setError(null);
       const res  = await apiFetch(`/artists`);
       const data = await res.json();
-      setArtists(data);
+
+      // Real artists alphabetically first, placeholder artistX ids at bottom
+      const sorted = data.sort((a, b) => {
+        const aIsPlaceholder = /^artist\d+$/.test(a.id);
+        const bIsPlaceholder = /^artist\d+$/.test(b.id);
+        if (aIsPlaceholder && !bIsPlaceholder) return 1;
+        if (!aIsPlaceholder && bIsPlaceholder) return -1;
+        return a.name.localeCompare(b.name);
+      });
+      setArtists(sorted);
     } catch (e) {
       setError('Could not load artists.');
     } finally {
