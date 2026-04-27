@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "concert-tracker-app",
+    "name": "Concert Tracker",
     "slug": "concert-tracker-app",
     "extra": {
       "eas": {
@@ -18,7 +18,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.duty9347.concerttracker",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
