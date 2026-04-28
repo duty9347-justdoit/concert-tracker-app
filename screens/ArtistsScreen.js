@@ -291,7 +291,16 @@ export default function ArtistsScreen() {
               <TextInput
                 style={[styles.input, isEditing && styles.inputDisabled]}
                 value={form.id}
-                onChangeText={(v) => setForm({ ...form, id: v.toLowerCase().replace(/\s/g, '_') })}
+                onChangeText={(v) => {
+                  const clean = v.toLowerCase().replace(/\s/g, '_');
+                  setForm(f => ({
+                    ...f,
+                    id: clean,
+                    // Auto-fill search fields only if they haven't been manually changed
+                    setlistfm_query: f.setlistfm_query === f.id || f.setlistfm_query === '' ? clean : f.setlistfm_query,
+                    songkick_query:  f.songkick_query  === f.id || f.songkick_query  === '' ? clean : f.songkick_query,
+                  }));
+                }}
                 placeholder="e.g. ado  (lowercase, no spaces)"
                 placeholderTextColor="#444460"
                 editable={!isEditing}
